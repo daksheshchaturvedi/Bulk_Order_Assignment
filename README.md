@@ -61,3 +61,57 @@ This system is designed for high-volume order processing with transaction safety
 ```bash
 git clone https://github.com/daksheshchaturvedi/Bulk_Order_Assignment.git
 cd Bulk_Order_Assignment
+```
+### 2. Create Database
+```sql
+CREATE DATABASE order_system;
+
+```
+
+### 3. Configure Database
+```
+config/db.php
+```
+### 4. Run Server
+
+```bash
+php -S localhost:8000
+```
+server will start at
+```
+http://localhost:8000
+```
+
+
+###Fatch Unassigned Orders(USE POSTMAN)
+```
+GET /api/get_unassigned_orders.php
+```
+
+###Fatch Available Couriers
+```
+GET /api/get_available_couriers.php?location=Delhi
+```
+###Create Order
+```
+GET /api/get_available_couriers.php?location=Delhi
+```
+in body Enter
+```
+(
+  "delivery_location": "XYZ",
+  "order_value": 123
+)
+```
+###Bulk Assign Orders
+```
+POST /api/bulk_assign_orders.php
+```
+Body
+```
+{
+  "order_ids: [1,2,3,4,5]
+}
+
+
+
