@@ -1,7 +1,6 @@
 <?php
 include "../config/db.php";
 
-// Validate input
 if (!isset($_GET['location']) || empty($_GET['location'])) {
     echo json_encode([
         "status" => "error",
