@@ -1,11 +1,10 @@
 <?php
 include "../config/db.php";
 
-// Read JSON input
 $rawData = file_get_contents("php://input");
 $data = json_decode($rawData, true);
 
-// Validation
+
 if (!$data || !isset($data['delivery_location']) || !isset($data['order_value'])) {
     echo json_encode([
         "status" => "error",
