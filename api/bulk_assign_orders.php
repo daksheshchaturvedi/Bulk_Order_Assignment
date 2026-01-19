@@ -3,7 +3,6 @@ include "../config/db.php";
 
 $data = json_decode(file_get_contents("php://input"), true);
 
-// Validate input
 if (!isset($data['order_ids']) || !is_array($data['order_ids'])) {
     echo json_encode([
         "status" => "error",
@@ -12,7 +11,6 @@ if (!isset($data['order_ids']) || !is_array($data['order_ids'])) {
     exit;
 }
 
-// Limit to 500 per run (performance safe)
 $order_ids = array_slice($data['order_ids'], 0, 500);
 
 $assigned = [];
@@ -23,7 +21,6 @@ $conn->begin_transaction();
 try {
     foreach ($order_ids as $order_id) {
 
-        // Lock order row
         $order = $conn->query("
             SELECT delivery_location 
             FROM orders 
@@ -39,7 +36,6 @@ try {
         $orderData = $order->fetch_assoc();
         $location = $orderData['delivery_location'];
 
-        // Find courier with capacity
         $courier = $conn->query("
             SELECT c.id 
             FROM couriers c
@@ -58,16 +54,13 @@ try {
         $c = $courier->fetch_assoc();
         $courier_id = $c['id'];
 
-        // Insert assignment
         $conn->query("
             INSERT INTO order_assignments(order_id, courier_id, assignment_date)
             VALUES($order_id, $courier_id, NOW())
         ");
 
-        // Update order
         $conn->query("UPDATE orders SET status='ASSIGNED' WHERE order_id=$order_id");
 
-        // Update courier load
         $conn->query("
             UPDATE couriers 
             SET current_assigned_count = current_assigned_count + 1 
